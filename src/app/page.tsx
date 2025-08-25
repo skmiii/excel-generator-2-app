@@ -26,6 +26,10 @@ export default function Home() {
     inflowDate: false,
     inflowSource: false,
     listName: false,
+    officeName: false,
+    subIndustry: false,
+    remarks: false,
+    contactTitle: false,
   });
 
   const [customColumns, setCustomColumns] = useState<CustomColumn[]>([]); // New state for custom columns
@@ -51,10 +55,10 @@ export default function Home() {
             <h2 className="text-2xl font-semibold text-black border-b pb-3">必須項目</h2>
             <p className="text-sm text-black mt-2">下記はリードに定められた最低定義になります。略称は使わないでください　例：✗㈱　◯株式会社</p>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4">
-              <div className="p-3 bg-slate-100 rounded-md text-slate-800">顧客法人名</div>
-              <div className="p-3 bg-slate-100 rounded-md text-slate-800">担当者名（姓）</div>
-              <div className="p-3 bg-slate-100 rounded-md text-slate-800">担当者名（名）</div>
-              <div className="p-3 bg-slate-100 rounded-md text-slate-800">電話番号</div>
+              <div className="p-3 bg-slate-100 rounded-md text-black">顧客法人名</div>
+              <div className="p-3 bg-slate-100 rounded-md text-black">担当者名（姓）</div>
+              <div className="p-3 bg-slate-100 rounded-md text-black">担当者名（名）</div>
+              <div className="p-3 bg-slate-100 rounded-md text-black">電話番号</div>
               <div className="p-3 bg-slate-100 rounded-md text-black">業種</div>
             </div>
           </section>
