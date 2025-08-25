@@ -62,7 +62,9 @@ export default function ExcelButton({ optionalColumns, customColumns }: ExcelBut
           const sqref = `${colLetter}2:${colLetter}1048576`; // Apply validation from row 2 to max row
           
           const validationSheetColLetter = XLSX.utils.encode_col(validationColIndex);
-          const formula1 = `_ValidationLists!$${validationSheetColLetter}$1:$${validationSheetColLetter}$${optionsArray.length}`;
+          const formula1 = `_ValidationLists!${validationSheetColLetter}$1:${validationSheetColLetter}${optionsArray.length}`;
+
+          console.log("Generated formula1:", formula1);
 
           if (!ws['!dataValidations']) ws['!dataValidations'] = {};
           ws['!dataValidations'][sqref] = {
