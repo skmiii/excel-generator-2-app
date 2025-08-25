@@ -119,7 +119,7 @@ export default function Home() {
                 <li>「データの入力規則」ダイアログボックスが開きます。</li>
                 <li>「<strong>設定</strong>」タブで、「<strong>入力値の種類</strong>」を「<strong>リスト</strong>」に設定します。</li>
                 <li>「<strong>元の値</strong>」の欄に、以下のように入力します。（例は<code>_ValidationLists</code>シートの<code>C</code>列に選択肢がある場合）<br/>
-                    <code>='_ValidationLists'!$C$1:$C$N</code><br/>
+                    <code>=&apos;_ValidationLists&apos;!$C$1:$C$N</code><br/>
                     （<code>N</code>は選択肢の最終行番号です。<code>_ValidationLists</code>シートを確認して、正しい列と行の範囲を指定してください。）
                 </li>
                 <li>「<strong>OK</strong>」をクリックします。</li>
