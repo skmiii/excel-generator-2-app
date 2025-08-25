@@ -26,7 +26,7 @@ export default function OptionalColumns({ columns, onChange }: OptionalColumnsPr
   return (
     <section className="p-6 bg-white rounded-lg shadow">
       <h2 className="text-2xl font-semibold text-gray-700 border-b pb-3">追加項目</h2>
-      <p className="text-sm text-gray-500 mt-2">含めたい項目にチェックを入れてください。</p>
+      <p className="text-sm text-black mt-2">含めたい項目にチェックを入れてください。</p>
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4">
         {Object.keys(columnLabels).map((key) => (
           <label key={key} className="flex items-center space-x-2 p-3 rounded-md hover:bg-gray-100 cursor-pointer">

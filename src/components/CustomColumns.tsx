@@ -36,7 +36,7 @@ export default function CustomColumns({ customColumns, setCustomColumns }: Custo
 
   return (
     <section className="p-6 bg-white rounded-lg shadow">
-      <h2 className="text-2xl font-semibold text-gray-900 border-b pb-3">オリジナル項目</h2>
+      <h2 className="text-2xl font-semibold text-black border-b pb-3">オリジナル項目</h2>
       <p className="text-sm text-gray-500 mt-2">自由な項目を追加します。</p>
       <div className="mt-4 space-y-4">
         {customColumns.map(col => (

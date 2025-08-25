@@ -48,8 +48,8 @@ export default function Home() {
 
         <div className="space-y-10">
           <section className="p-6 bg-white rounded-lg shadow">
-            <h2 className="text-2xl font-semibold text-gray-700 border-b pb-3">必須項目</h2>
-            <p className="text-sm text-gray-500 mt-2">これらの項目は常にExcelに含まれます。</p>
+            <h2 className="text-2xl font-semibold text-black border-b pb-3">必須項目</h2>
+            <p className="text-sm text-black mt-2">含めたい項目にチェックを入れてください。</p>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4">
               <div className="p-3 bg-slate-100 rounded-md text-slate-800">顧客法人名</div>
               <div className="p-3 bg-slate-100 rounded-md text-slate-800">担当者名（姓）</div>
@@ -65,11 +65,11 @@ export default function Home() {
           <CustomColumns customColumns={customColumns} setCustomColumns={setCustomColumns} />
           
           <section className="p-6 bg-white rounded-lg shadow">
-             <h2 className="text-lg font-semibold text-gray-700">現在の選択状況（確認用）</h2>
+             <h2 className="text-lg font-semibold text-black">現在の選択状況（確認用）</h2>
              <pre className="text-xs bg-gray-100 p-4 rounded-md mt-2">
                {JSON.stringify(optionalColumns, null, 2)}
              </pre>
-             <h2 className="text-lg font-semibold text-gray-900 mt-4">現在のオリジナル項目（確認用）</h2>
+             <h2 className="text-lg font-semibold text-black mt-4">現在のオリジナル項目（確認用）</h2>
              <pre className="text-xs bg-gray-100 p-4 rounded-md mt-2">
                {JSON.stringify(customColumns, null, 2)}
              </pre>
