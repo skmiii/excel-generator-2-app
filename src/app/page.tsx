@@ -49,7 +49,7 @@ export default function Home() {
         <div className="space-y-10">
           <section className="p-6 bg-white rounded-lg shadow">
             <h2 className="text-2xl font-semibold text-black border-b pb-3">必須項目</h2>
-            <p className="text-sm text-black mt-2">含めたい項目にチェックを入れてください。</p>
+            <p className="text-sm text-black mt-2">下記はリードに定められた最低定義になります。略称は使わないでください　例：✗㈱　◯株式会社</p>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4">
               <div className="p-3 bg-slate-100 rounded-md text-slate-800">顧客法人名</div>
               <div className="p-3 bg-slate-100 rounded-md text-slate-800">担当者名（姓）</div>
