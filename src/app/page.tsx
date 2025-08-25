@@ -22,7 +22,10 @@ export default function Home() {
     }));
   };
 
-  const handleGenerateClick = () => {
+  const handleGenerateClick = async () => {
+    // ボタンが押された時に、動的にライブラリを読み込む
+    const XLSX = await import('xlsx');
+
     // 1. ヘッダー（列名）のリストを作成する
     const fixedColumns = ['顧客法人名', '担当者名（姓）', '担当者名（名）', '電話番号', '業種'];
     const optionalColumnLabels: { [key: string]: string } = {
@@ -41,7 +44,6 @@ export default function Home() {
     const headers = [...fixedColumns, ...selectedOptionalColumns];
 
     // 2. Excelのワークシートを作成する
-    // ヘッダーだけの空のワークシート
     const ws = XLSX.utils.aoa_to_sheet([headers]);
 
     // 3. 新しいワークブックを作成し、ワークシートを追加する
