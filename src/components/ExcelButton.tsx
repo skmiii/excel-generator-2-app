@@ -55,7 +55,7 @@ export default function ExcelButton({ optionalColumns, customColumns }: ExcelBut
             ws['!dataValidations'][sqref] = {
               type: 'list',
               allowBlank: true,
-              formula1: `"${col.options.trim()}"` // Options directly in formula
+              formula1: col.options.trim() // Options directly in formula, removed extra quotes
             };
           }
         }
