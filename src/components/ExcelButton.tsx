@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState }s from 'react';
 import * as XLSX from 'xlsx';
 
 interface CustomColumn {
@@ -13,6 +13,7 @@ interface CustomColumn {
 interface ExcelButtonProps {
   optionalColumns: { [key: string]: boolean };
   customColumns: CustomColumn[]; // Add customColumns prop
+  manualContent: string[]; // New prop for manual content
 }
 
 const JAPANESE_PREFECTURES = [
@@ -52,7 +53,7 @@ const EXAMPLE_DATA_MAP: { [key: string]: string } = {
   '担当者役職': '例：部長',
 };
 
-export default function ExcelButton({ optionalColumns, customColumns }: ExcelButtonProps) {
+export default function ExcelButton({ optionalColumns, customColumns, manualContent }: ExcelButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleGenerateClick = () => {
@@ -106,6 +107,7 @@ export default function ExcelButton({ optionalColumns, customColumns }: ExcelBut
       XLSX.utils.book_append_sheet(wb, ws, '顧客リスト');
 
       // --- プルダウン選択肢用の別シートを作成 --- 
+      const VALIDATION_SHEET_NAME = '選択肢一覧'; // New sheet name
       const validationOptionsData: string[][] = [];
       let validationColIndex = 0;
 
@@ -123,7 +125,8 @@ export default function ExcelButton({ optionalColumns, customColumns }: ExcelBut
           const sqref = `${colLetter}2:${colLetter}1048576`; // Apply validation from row 2 to max row
           
           const validationSheetColLetter = XLSX.utils.encode_col(validationColIndex);
-          const formula1 = `'_ValidationLists'!$${validationSheetColLetter}$1:$${validationSheetColLetter}$${options.length}`;
+          // Updated formula1 to use new sheet name and absolute references
+          const formula1 = `'${VALIDATION_SHEET_NAME}'!$${validationSheetColLetter}$1:$${validationSheetColLetter}$${options.length}`;
 
           console.log(`Generated formula1 for ${colName}:`, formula1);
 
@@ -157,9 +160,16 @@ export default function ExcelButton({ optionalColumns, customColumns }: ExcelBut
 
       if (validationOptionsData.length > 0) {
         const validationWs = XLSX.utils.aoa_to_sheet(validationOptionsData);
-        XLSX.utils.book_append_sheet(wb, validationWs, '_ValidationLists');
+        XLSX.utils.book_append_sheet(wb, validationWs, VALIDATION_SHEET_NAME);
       }
       // --- プルダウン選択肢用の別シート作成 終わり --- 
+
+      // --- マニュアルシートを追加 --- 
+      if (manualContent && manualContent.length > 0) {
+        const manualWs = XLSX.utils.aoa_to_sheet(manualContent.map(line => [line]));
+        XLSX.utils.book_append_sheet(wb, manualWs, '！マニュアル！');
+      }
+      // --- マニュアルシート追加 終わり --- 
 
       XLSX.writeFile(wb, '顧客管理フォーマット.xlsx');
     } catch (error) {

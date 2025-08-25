@@ -42,6 +42,40 @@ export default function Home() {
     }));
   };
 
+  // マニュアルの内容を文字列配列として定義
+  const manualContent = [
+    "このツールは、Excelの顧客管理フォーマットを簡単に作成するためのものです。",
+    "",
+    "## 1. 項目の選択・追加",
+    "* 「追加項目」セクションで、Excelに含めたい項目にチェックを入れてください。",
+    "* 「オリジナル項目」セクションでは、「＋項目を追加」ボタンで自由に新しい項目を作成できます。",
+    "* 項目名を入力し、「自由入力」か「プルダウン」を選択してください。",
+    "* 「プルダウン」を選択した場合、「選択肢（カンマ区切り）」に、プルダウンで表示させたい項目をカンマ（,）で区切って入力してください。（例：男性,女性,その他）",
+    "",
+    "## 2. Excelファイルの生成",
+    "* 必要な項目を全て選択・設定したら、「Excelフォーマットを生成」ボタンをクリックしてください。",
+    "* 設定された内容でExcelファイルがダウンロードされます。",
+    "",
+    "## 3. 生成されたExcelファイルについて",
+    "* ダウンロードされるExcelファイルには、主に3つのシートが含まれます。",
+    "* 「顧客リスト」シート：これがメインのフォーマットシートです。1行目に項目名、2行目に例のデータが入力されています。",
+    "* 「選択肢一覧」シート：プルダウンの選択肢が格納されているシートです。通常は直接編集する必要はありません。",
+    "* 「！マニュアル！」シート：このツールの使い方マニュアルです。",
+    "",
+    "## 4. Excelでのプルダウン設定（手動）",
+    "「オリジナル項目」で「プルダウン」を選択した項目は、Excel側で手動で設定が必要です。",
+    "1. プルダウンを設定したいセル（例：顧客リストシートのC2セルからC100セルまで）を選択します。",
+    "2. Excelのリボンメニューから「データ」タブをクリックします。",
+    "3. 「データツール」グループにある「データの入力規則」をクリックします。",
+    "4. 「データの入力規則」ダイアログボックスが開きます。",
+    "5. 「設定」タブで、「入力値の種類」を「リスト」に設定します。",
+    "6. 「元の値」の欄に、以下のように入力します。（例は選択肢一覧シートのC列に選択肢がある場合）",
+    "   例：='選択肢一覧'!$C$1:$C$N",
+    "   （Nは選択肢の最終行番号です。選択肢一覧シートを確認して、正しい列と行の範囲を指定してください。）",
+    "7. 「OK」をクリックします。",
+    "これで、選択したセルにプルダウンが設定されます。"
+  ];
+
   return (
     <main className="flex min-h-screen flex-col items-center p-8 sm:p-16 bg-gray-50">
       <div className="w-full max-w-4xl">
@@ -80,7 +114,7 @@ export default function Home() {
           </section>
 
           <section className="text-center mt-12">
-            <DynamicExcelButton optionalColumns={optionalColumns} customColumns={customColumns} />
+            <DynamicExcelButton optionalColumns={optionalColumns} customColumns={customColumns} manualContent={manualContent} />
           </section>
 
           {/* --- マニュアルセクション --- */}
@@ -105,9 +139,10 @@ export default function Home() {
 
               <h3 className="text-xl font-semibold text-black">3. 生成されたExcelファイルについて</h3>
               <ul className="list-disc list-inside space-y-2">
-                <li>ダウンロードされるExcelファイルには、主に2つのシートが含まれます。</li>
+                <li>ダウンロードされるExcelファイルには、主に3つのシートが含まれます。</li>
                 <li><strong>「顧客リスト」シート</strong>：これがメインのフォーマットシートです。1行目に項目名、2行目に例のデータが入力されています。</li>
-                <li><strong>「_ValidationLists」シート</strong>：プルダウンの選択肢が格納されているシートです。通常は直接編集する必要はありません。</li>
+                <li><strong>「選択肢一覧」シート</strong>：プルダウンの選択肢が格納されているシートです。</li>
+                <li><strong>「！マニュアル！」シート</strong>：このツールの使い方マニュアルです。</li>
               </ul>
 
               <h3 className="text-xl font-semibold text-black">4. Excelでのプルダウン設定（手動）</h3>
@@ -117,10 +152,10 @@ export default function Home() {
                 <li>Excelのリボンメニューから「<strong>データ</strong>」タブをクリックします。</li>
                 <li>「<strong>データツール</strong>」グループにある「<strong>データの入力規則</strong>」をクリックします。</li>
                 <li>「データの入力規則」ダイアログボックスが開きます。</li>
-                <li>「<strong>設定</strong>」タブで、「<strong>入力値の種類</strong>」を「<strong>リスト</strong>」に設定します。</li>
-                <li>「<strong>元の値</strong>」の欄に、以下のように入力します。（例は<code>_ValidationLists</code>シートの<code>C</code>列に選択肢がある場合）<br/>
-                    <code>=&apos;_ValidationLists&apos;!$C$1:$C$N</code><br/>
-                    （<code>N</code>は選択肢の最終行番号です。<code>_ValidationLists</code>シートを確認して、正しい列と行の範囲を指定してください。）
+                <li>「<strong>設定</strong>」タブで、「入力値の種類」を「<strong>リスト</strong>」に設定します。</li>
+                <li>「<strong>元の値</strong>」の欄に、以下のように入力します。（例は<code>選択肢一覧</code>シートの<code>C</code>列に選択肢がある場合）<br/>
+                    <code>=&apos;選択肢一覧&apos;!$C$1:$C$N</code><br/>
+                    （<code>N</code>は選択肢の最終行番号です。<code>選択肢一覧</code>シートを確認して、正しい列と行の範囲を指定してください。）
                 </li>
                 <li>「<strong>OK</strong>」をクリックします。</li>
               </ol>
