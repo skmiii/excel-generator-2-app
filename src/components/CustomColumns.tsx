@@ -46,7 +46,7 @@ export default function CustomColumns({ customColumns, setCustomColumns }: Custo
               placeholder="項目名"
               value={col.name}
               onChange={(e) => updateColumn(col.id, 'name', e.target.value)}
-              className="flex-grow p-2 border rounded-md w-full sm:w-auto"
+              className="flex-grow p-2 border rounded-md w-full sm:w-auto text-black custom-placeholder-black"
             />
             <select
               value={col.type}
