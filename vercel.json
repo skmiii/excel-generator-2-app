@@ -1,8 +1,15 @@
 {
-  "rewrites": [
+  "builds": [
     {
-      "source": "/api/:path*",
-      "destination": "/backend/main.py"
+      "src": "package.json",
+      "use": "@vercel/next"
+    },
+    {
+      "src": "backend/main.py",
+      "use": "@vercel/python"
     }
+  ],
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/backend/main.py" }
   ]
 }
