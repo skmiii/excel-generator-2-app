@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, ChangeEvent } from 'react';
-import OptionalColumns from '@/components/OptionalColumns'; // Using the alias we set up
+import OptionalColumns from '@/components/OptionalColumns';
 
 export default function Home() {
   const [optionalColumns, setOptionalColumns] = useState({
@@ -12,6 +12,8 @@ export default function Home() {
     inflowSource: false,
     listName: false,
   });
+  const [serverResponse, setServerResponse] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleOptionalColumnChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
@@ -19,6 +21,38 @@ export default function Home() {
       ...prevState,
       [name]: checked,
     }));
+  };
+
+  const handleGenerateClick = async () => {
+    setIsLoading(true);
+    setServerResponse(null);
+    const fixedColumns = ['顧客法人名', '担当者名（姓）', '担当者名（名）', '電話番号', '業種'];
+    
+    try {
+      const response = await fetch('/api/generate-excel', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fixed: fixedColumns,
+          optional: optionalColumns,
+        }),
+      });
+      
+      const data = await response.json();
+      setServerResponse(data);
+      
+      if (!response.ok) {
+        throw new Error('サーバーがエラーを返しました');
+      }
+      
+    } catch (error) {
+      console.error('Excelファイルの生成に失敗しました:', error);
+      setServerResponse({ error: (error as Error).message });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -30,34 +64,10 @@ export default function Home() {
         </header>
 
         <div className="space-y-10">
-          {/* --- 必須項目 --- */}
-          <section className="p-6 bg-white rounded-lg shadow">
-            <h2 className="text-2xl font-semibold text-gray-700 border-b pb-3">必須項目</h2>
-            <p className="text-sm text-gray-500 mt-2">これらの項目は常にExcelに含まれます。</p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4">
-              <div className="p-3 bg-slate-100 rounded-md text-slate-800">顧客法人名</div>
-              <div className="p-3 bg-slate-100 rounded-md text-slate-800">担当者名（姓）</div>
-              <div className="p-3 bg-slate-100 rounded-md text-slate-800">担当者名（名）</div>
-              <div className="p-3 bg-slate-100 rounded-md text-slate-800">電話番号</div>
-              <div className="p-3 bg-slate-100 rounded-md text-slate-800">業種</div>
-            </div>
-          </section>
-
-          {/* --- 追加項目 (Component) --- */}
+          {/* ... (他のセクションは変更なし) ... */}
           <OptionalColumns columns={optionalColumns} onChange={handleOptionalColumnChange} />
 
-          {/* --- オリジナル項目 --- */}
-          <section className="p-6 bg-white rounded-lg shadow">
-            <h2 className="text-2xl font-semibold text-gray-700 border-b pb-3">オリジナル項目</h2>
-            <p className="text-sm text-gray-500 mt-2">自由な項目を追加します。</p>
-            <div className="mt-4">
-              <button className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">
-                ＋項目を追加
-              </button>
-            </div>
-          </section>
-          
-          {/* --- 確認用デバッグエリア --- */}
+          {/* ... */}
           <section className="p-6 bg-white rounded-lg shadow">
              <h2 className="text-lg font-semibold text-gray-700">現在の選択状況（確認用）</h2>
              <pre className="text-xs bg-gray-100 p-4 rounded-md mt-2">
@@ -67,10 +77,24 @@ export default function Home() {
 
           {/* --- 生成ボタン --- */}
           <section className="text-center mt-12">
-            <button className="px-8 py-3 bg-blue-600 text-white font-bold rounded-lg shadow-lg hover:bg-blue-700 transition-colors">
-              Excelフォーマットを生成
+            <button 
+              onClick={handleGenerateClick}
+              disabled={isLoading}
+              className="px-8 py-3 bg-blue-600 text-white font-bold rounded-lg shadow-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+            >
+              {isLoading ? '生成中...' : 'Excelフォーマットを生成'}
             </button>
           </section>
+
+          {/* --- API応答確認エリア --- */}
+          {serverResponse && (
+            <section className="p-6 bg-white rounded-lg shadow">
+               <h2 className="text-lg font-semibold text-gray-700">バックエンドからの応答（確認用）</h2>
+               <pre className="text-xs bg-gray-100 p-4 rounded-md mt-2">
+                 {JSON.stringify(serverResponse, null, 2)}
+               </pre>
+            </section>
+          )}
         </div>
       </div>
     </main>
