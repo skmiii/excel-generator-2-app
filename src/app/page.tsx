@@ -55,7 +55,7 @@ export default function Home() {
               <div className="p-3 bg-slate-100 rounded-md text-slate-800">担当者名（姓）</div>
               <div className="p-3 bg-slate-100 rounded-md text-slate-800">担当者名（名）</div>
               <div className="p-3 bg-slate-100 rounded-md text-slate-800">電話番号</div>
-              <div className="p-3 bg-slate-100 rounded-md text-slate-800">業種</div>
+              <div className="p-3 bg-slate-100 rounded-md text-black">業種</div>
             </div>
           </section>
 

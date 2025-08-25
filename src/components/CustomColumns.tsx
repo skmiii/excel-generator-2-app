@@ -76,7 +76,7 @@ export default function CustomColumns({ customColumns, setCustomColumns }: Custo
       </div>
       <button
         onClick={addColumn}
-        className="mt-4 px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
+        className="mt-4 px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300"
       >
         ＋項目を追加
       </button>
