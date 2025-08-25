@@ -1,4 +1,26 @@
+'use client';
+
+import { useState, ChangeEvent } from 'react';
+import OptionalColumns from '@/components/OptionalColumns'; // Using the alias we set up
+
 export default function Home() {
+  const [optionalColumns, setOptionalColumns] = useState({
+    prefecture: false,
+    address: false,
+    email: false,
+    inflowDate: false,
+    inflowSource: false,
+    listName: false,
+  });
+
+  const handleOptionalColumnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setOptionalColumns(prevState => ({
+      ...prevState,
+      [name]: checked,
+    }));
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center p-8 sm:p-16 bg-gray-50">
       <div className="w-full max-w-4xl">
@@ -21,48 +43,26 @@ export default function Home() {
             </div>
           </section>
 
-          {/* --- 追加項目 --- */}
-          <section className="p-6 bg-white rounded-lg shadow">
-            <h2 className="text-2xl font-semibold text-gray-700 border-b pb-3">追加項目</h2>
-            <p className="text-sm text-gray-500 mt-2">含めたい項目にチェックを入れてください。</p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4">
-              <label className="flex items-center space-x-2 p-3 rounded-md hover:bg-gray-100 cursor-pointer">
-                <input type="checkbox" className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
-                <span>県域</span>
-              </label>
-              <label className="flex items-center space-x-2 p-3 rounded-md hover:bg-gray-100 cursor-pointer">
-                <input type="checkbox" className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
-                <span>住所</span>
-              </label>
-              <label className="flex items-center space-x-2 p-3 rounded-md hover:bg-gray-100 cursor-pointer">
-                <input type="checkbox" className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
-                <span>メールアドレス</span>
-              </label>
-              <label className="flex items-center space-x-2 p-3 rounded-md hover:bg-gray-100 cursor-pointer">
-                <input type="checkbox" className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
-                <span>流入日</span>
-              </label>
-              <label className="flex items-center space-x-2 p-3 rounded-md hover:bg-gray-100 cursor-pointer">
-                <input type="checkbox" className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
-                <span>流入元</span>
-              </label>
-              <label className="flex items-center space-x-2 p-3 rounded-md hover:bg-gray-100 cursor-pointer">
-                <input type="checkbox" className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
-                <span>リスト名</span>
-              </label>
-            </div>
-          </section>
+          {/* --- 追加項目 (Component) --- */}
+          <OptionalColumns columns={optionalColumns} onChange={handleOptionalColumnChange} />
 
           {/* --- オリジナル項目 --- */}
           <section className="p-6 bg-white rounded-lg shadow">
             <h2 className="text-2xl font-semibold text-gray-700 border-b pb-3">オリジナル項目</h2>
             <p className="text-sm text-gray-500 mt-2">自由な項目を追加します。</p>
             <div className="mt-4">
-              {/* ここに項目追加のUIが将来的に入ります */}
               <button className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">
                 ＋項目を追加
               </button>
             </div>
+          </section>
+          
+          {/* --- 確認用デバッグエリア --- */}
+          <section className="p-6 bg-white rounded-lg shadow">
+             <h2 className="text-lg font-semibold text-gray-700">現在の選択状況（確認用）</h2>
+             <pre className="text-xs bg-gray-100 p-4 rounded-md mt-2">
+               {JSON.stringify(optionalColumns, null, 2)}
+             </pre>
           </section>
 
           {/* --- 生成ボタン --- */}
