@@ -3,12 +3,20 @@
 import { useState, ChangeEvent } from 'react';
 import dynamic from 'next/dynamic';
 import OptionalColumns from '@/components/OptionalColumns';
+import CustomColumns from '@/components/CustomColumns'; // Import CustomColumns
 
 // Dynamically import the ExcelButton component with SSR turned off
 const DynamicExcelButton = dynamic(() => import('@/components/ExcelButton'), {
   ssr: false,
   loading: () => <button className="px-8 py-3 bg-gray-400 text-white font-bold rounded-lg shadow-lg cursor-not-allowed">読み込み中...</button>
 });
+
+interface CustomColumn {
+  id: number;
+  name: string;
+  type: 'text' | 'select';
+  options?: string; // Comma-separated for select type
+}
 
 export default function Home() {
   const [optionalColumns, setOptionalColumns] = useState({
@@ -19,6 +27,8 @@ export default function Home() {
     inflowSource: false,
     listName: false,
   });
+
+  const [customColumns, setCustomColumns] = useState<CustomColumn[]>([]); // New state for custom columns
 
   const handleOptionalColumnChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
@@ -51,25 +61,22 @@ export default function Home() {
 
           <OptionalColumns columns={optionalColumns} onChange={handleOptionalColumnChange} />
 
-          <section className="p-6 bg-white rounded-lg shadow">
-            <h2 className="text-2xl font-semibold text-gray-700 border-b pb-3">オリジナル項目</h2>
-            <p className="text-sm text-gray-500 mt-2">自由な項目を追加します。</p>
-            <div className="mt-4">
-              <button className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">
-                ＋項目を追加
-              </button>
-            </div>
-          </section>
+          {/* Render CustomColumns component */}
+          <CustomColumns customColumns={customColumns} setCustomColumns={setCustomColumns} />
           
           <section className="p-6 bg-white rounded-lg shadow">
              <h2 className="text-lg font-semibold text-gray-700">現在の選択状況（確認用）</h2>
              <pre className="text-xs bg-gray-100 p-4 rounded-md mt-2">
                {JSON.stringify(optionalColumns, null, 2)}
              </pre>
+             <h2 className="text-lg font-semibold text-gray-700 mt-4">現在のオリジナル項目（確認用）</h2>
+             <pre className="text-xs bg-gray-100 p-4 rounded-md mt-2">
+               {JSON.stringify(customColumns, null, 2)}
+             </pre>
           </section>
 
           <section className="text-center mt-12">
-            <DynamicExcelButton optionalColumns={optionalColumns} />
+            <DynamicExcelButton optionalColumns={optionalColumns} customColumns={customColumns} />
           </section>
         </div>
       </div>

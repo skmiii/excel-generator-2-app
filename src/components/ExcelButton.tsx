@@ -3,11 +3,19 @@
 import { useState } from 'react';
 import * as XLSX from 'xlsx';
 
-interface ExcelButtonProps {
-  optionalColumns: { [key: string]: boolean };
+interface CustomColumn {
+  id: number;
+  name: string;
+  type: 'text' | 'select';
+  options?: string; // Comma-separated for select type
 }
 
-export default function ExcelButton({ optionalColumns }: ExcelButtonProps) {
+interface ExcelButtonProps {
+  optionalColumns: { [key: string]: boolean };
+  customColumns: CustomColumn[]; // Add customColumns prop
+}
+
+export default function ExcelButton({ optionalColumns, customColumns }: ExcelButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleGenerateClick = () => {
@@ -28,7 +36,10 @@ export default function ExcelButton({ optionalColumns }: ExcelButtonProps) {
         .filter(key => optionalColumns[key as keyof typeof optionalColumns])
         .map(key => optionalColumnLabels[key]);
 
-      const headers = [...fixedColumns, ...selectedOptionalColumns];
+      // Extract names from custom columns
+      const customColumnNames = customColumns.map(col => col.name).filter(name => name.trim() !== '');
+
+      const headers = [...fixedColumns, ...selectedOptionalColumns, ...customColumnNames];
       const ws = XLSX.utils.aoa_to_sheet([headers]);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, '顧客リスト');
