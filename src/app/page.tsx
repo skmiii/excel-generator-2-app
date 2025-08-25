@@ -1,8 +1,14 @@
 'use client';
 
 import { useState, ChangeEvent } from 'react';
+import dynamic from 'next/dynamic';
 import OptionalColumns from '@/components/OptionalColumns';
-import * as XLSX from 'xlsx';
+
+// Dynamically import the ExcelButton component with SSR turned off
+const DynamicExcelButton = dynamic(() => import('@/components/ExcelButton'), {
+  ssr: false,
+  loading: () => <button className="px-8 py-3 bg-gray-400 text-white font-bold rounded-lg shadow-lg cursor-not-allowed">読み込み中...</button>
+});
 
 export default function Home() {
   const [optionalColumns, setOptionalColumns] = useState({
@@ -20,38 +26,6 @@ export default function Home() {
       ...prevState,
       [name]: checked,
     }));
-  };
-
-  const handleGenerateClick = async () => {
-    // ボタンが押された時に、動的にライブラリを読み込む
-    const XLSX = await import('xlsx');
-
-    // 1. ヘッダー（列名）のリストを作成する
-    const fixedColumns = ['顧客法人名', '担当者名（姓）', '担当者名（名）', '電話番号', '業種'];
-    const optionalColumnLabels: { [key: string]: string } = {
-      prefecture: '県域',
-      address: '住所',
-      email: 'メールアドレス',
-      inflowDate: '流入日',
-      inflowSource: '流入元',
-      listName: 'リスト名',
-    };
-
-    const selectedOptionalColumns = Object.keys(optionalColumns)
-      .filter(key => optionalColumns[key as keyof typeof optionalColumns])
-      .map(key => optionalColumnLabels[key]);
-
-    const headers = [...fixedColumns, ...selectedOptionalColumns];
-
-    // 2. Excelのワークシートを作成する
-    const ws = XLSX.utils.aoa_to_sheet([headers]);
-
-    // 3. 新しいワークブックを作成し、ワークシートを追加する
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, '顧客リスト');
-
-    // 4. ファイルを生成してダウンロードさせる
-    XLSX.writeFile(wb, '顧客管理フォーマット.xlsx');
   };
 
   return (
@@ -95,12 +69,7 @@ export default function Home() {
           </section>
 
           <section className="text-center mt-12">
-            <button 
-              onClick={handleGenerateClick}
-              className="px-8 py-3 bg-blue-600 text-white font-bold rounded-lg shadow-lg hover:bg-blue-700 transition-colors"
-            >
-              Excelフォーマットを生成
-            </button>
+            <DynamicExcelButton optionalColumns={optionalColumns} />
           </section>
         </div>
       </div>
