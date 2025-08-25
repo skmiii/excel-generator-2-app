@@ -51,10 +51,10 @@ export default function CustomColumns({ customColumns, setCustomColumns }: Custo
             <select
               value={col.type}
               onChange={(e) => updateColumn(col.id, 'type', e.target.value as 'text' | 'select')}
-              className="p-2 border rounded-md"
+              className="p-2 border rounded-md text-black"
             >
-              <option value="text">自由入力</option>
-              <option value="select">プルダウン</option>
+              <option value="text" className="text-black">自由入力</option>
+              <option value="select" className="text-black">プルダウン</option>
             </select>
             {col.type === 'select' && (
               <input
