@@ -69,7 +69,7 @@ export default function Home() {
              <pre className="text-xs bg-gray-100 p-4 rounded-md mt-2">
                {JSON.stringify(optionalColumns, null, 2)}
              </pre>
-             <h2 className="text-lg font-semibold text-gray-700 mt-4">現在のオリジナル項目（確認用）</h2>
+             <h2 className="text-lg font-semibold text-gray-900 mt-4">現在のオリジナル項目（確認用）</h2>
              <pre className="text-xs bg-gray-100 p-4 rounded-md mt-2">
                {JSON.stringify(customColumns, null, 2)}
              </pre>

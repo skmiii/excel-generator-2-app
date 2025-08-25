@@ -41,6 +41,26 @@ export default function ExcelButton({ optionalColumns, customColumns }: ExcelBut
 
       const headers = [...fixedColumns, ...selectedOptionalColumns, ...customColumnNames];
       const ws = XLSX.utils.aoa_to_sheet([headers]);
+
+      // Add data validation for select type custom columns
+      customColumns.forEach(col => {
+        if (col.type === 'select' && col.options && col.options.trim() !== '') {
+          const colIndex = headers.indexOf(col.name);
+          if (colIndex !== -1) {
+            const colLetter = XLSX.utils.encode_col(colIndex);
+            // Apply validation from row 2 to the maximum possible row
+            const sqref = `${colLetter}2:${colLetter}1048576`; 
+            
+            if (!ws['!dataValidations']) ws['!dataValidations'] = {};
+            ws['!dataValidations'][sqref] = {
+              type: 'list',
+              allowBlank: true,
+              formula1: `"${col.options.trim()}"` // Options directly in formula
+            };
+          }
+        }
+      });
+
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, '顧客リスト');
       XLSX.writeFile(wb, '顧客管理フォーマット.xlsx');
