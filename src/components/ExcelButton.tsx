@@ -15,6 +15,20 @@ interface ExcelButtonProps {
   customColumns: CustomColumn[]; // Add customColumns prop
 }
 
+const JAPANESE_PREFECTURES = [
+  "北海道", "青森県", "岩手県", "宮城県", "秋田県", "山形県", "福島県",
+  "茨城県", "栃木県", "群馬県", "埼玉県", "千葉県", "東京都", "神奈川県",
+  "新潟県", "富山県", "石川県", "福井県", "山梨県", "長野県", "岐阜県",
+  "静岡県", "愛知県", "三重県", "滋賀県", "京都府", "大阪府", "兵庫県",
+  "奈良県", "和歌山県", "鳥取県", "島根県", "岡山県", "広島県", "山口県",
+  "徳島県", "香川県", "愛媛県", "高知県", "福岡県", "佐賀県", "長崎県",
+  "熊本県", "大分県", "宮崎県", "鹿児島県", "沖縄県"
+];
+
+const INDUSTRY_OPTIONS = [
+  "製造業", "サービス業", "情報通信業", "小売業", "卸売業", "建設業", "医療・福祉", "教育・学習支援業", "金融・保険業", "不動産業", "運輸業", "その他"
+];
+
 export default function ExcelButton({ optionalColumns, customColumns }: ExcelButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -48,23 +62,23 @@ export default function ExcelButton({ optionalColumns, customColumns }: ExcelBut
       const validationOptionsData: string[][] = [];
       let validationColIndex = 0;
 
-      customColumns.forEach(col => {
-        if (col.type === 'select' && col.options && col.options.trim() !== '') {
-          const optionsArray = col.options.split(',').map(opt => opt.trim());
-          
+      // Add fixed/optional dropdowns
+      const addValidationList = (options: string[], colName: string) => {
+        const colIndex = headers.indexOf(colName);
+        if (colIndex !== -1) {
           // Write options to a column in the validation sheet
-          for (let i = 0; i < optionsArray.length; i++) {
+          for (let i = 0; i < options.length; i++) {
             if (!validationOptionsData[i]) validationOptionsData[i] = [];
-            validationOptionsData[i][validationColIndex] = optionsArray[i];
+            validationOptionsData[i][validationColIndex] = options[i];
           }
 
-          const colLetter = XLSX.utils.encode_col(headers.indexOf(col.name));
+          const colLetter = XLSX.utils.encode_col(colIndex);
           const sqref = `${colLetter}2:${colLetter}1048576`; // Apply validation from row 2 to max row
           
           const validationSheetColLetter = XLSX.utils.encode_col(validationColIndex);
-          const formula1 = `'_ValidationLists'!${validationSheetColLetter}$1:${validationSheetColLetter}${optionsArray.length}`;
+          const formula1 = `'_ValidationLists'!$${validationSheetColLetter}$1:$${validationSheetColLetter}$${options.length}`;
 
-          console.log("Generated formula1:", formula1);
+          console.log(`Generated formula1 for ${colName}:`, formula1);
 
           if (!ws['!dataValidations']) ws['!dataValidations'] = {};
           ws['!dataValidations'][sqref] = {
@@ -73,6 +87,24 @@ export default function ExcelButton({ optionalColumns, customColumns }: ExcelBut
             formula1: formula1
           };
           validationColIndex++;
+        }
+      };
+
+      // Add Prefecture dropdown if '県域' column exists
+      if (headers.includes('県域')) {
+        addValidationList(JAPANESE_PREFECTURES, '県域');
+      }
+
+      // Add Industry dropdown if '業種' column exists
+      if (headers.includes('業種')) {
+        addValidationList(INDUSTRY_OPTIONS, '業種');
+      }
+
+      // Add custom dropdowns
+      customColumns.forEach(col => {
+        if (col.type === 'select' && col.options && col.options.trim() !== '') {
+          const optionsArray = col.options.split(',').map(opt => opt.trim());
+          addValidationList(optionsArray, col.name);
         }
       });
 
