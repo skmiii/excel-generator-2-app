@@ -36,33 +36,50 @@ export default function ExcelButton({ optionalColumns, customColumns }: ExcelBut
         .filter(key => optionalColumns[key as keyof typeof optionalColumns])
         .map(key => optionalColumnLabels[key]);
 
-      // Extract names from custom columns
       const customColumnNames = customColumns.map(col => col.name).filter(name => name.trim() !== '');
 
       const headers = [...fixedColumns, ...selectedOptionalColumns, ...customColumnNames];
       const ws = XLSX.utils.aoa_to_sheet([headers]);
 
-      // Add data validation for select type custom columns
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, '顧客リスト');
+
+      // --- プルダウン選択肢用の別シートを作成 --- 
+      const validationOptionsData: string[][] = [];
+      let validationColIndex = 0;
+
       customColumns.forEach(col => {
         if (col.type === 'select' && col.options && col.options.trim() !== '') {
-          const colIndex = headers.indexOf(col.name);
-          if (colIndex !== -1) {
-            const colLetter = XLSX.utils.encode_col(colIndex);
-            // Apply validation from row 2 to the maximum possible row
-            const sqref = `${colLetter}2:${colLetter}1048576`; 
-            
-            if (!ws['!dataValidations']) ws['!dataValidations'] = {};
-            ws['!dataValidations'][sqref] = {
-              type: 'list',
-              allowBlank: true,
-              formula1: col.options.trim() // Options directly in formula, removed extra quotes
-            };
+          const optionsArray = col.options.split(',').map(opt => opt.trim());
+          
+          // Write options to a column in the validation sheet
+          for (let i = 0; i < optionsArray.length; i++) {
+            if (!validationOptionsData[i]) validationOptionsData[i] = [];
+            validationOptionsData[i][validationColIndex] = optionsArray[i];
           }
+
+          const colLetter = XLSX.utils.encode_col(headers.indexOf(col.name));
+          const sqref = `${colLetter}2:${colLetter}1048576`; // Apply validation from row 2 to max row
+          
+          const validationSheetColLetter = XLSX.utils.encode_col(validationColIndex);
+          const formula1 = `_ValidationLists!$${validationSheetColLetter}$1:$${validationSheetColLetter}$${optionsArray.length}`;
+
+          if (!ws['!dataValidations']) ws['!dataValidations'] = {};
+          ws['!dataValidations'][sqref] = {
+            type: 'list',
+            allowBlank: true,
+            formula1: formula1
+          };
+          validationColIndex++;
         }
       });
 
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, '顧客リスト');
+      if (validationOptionsData.length > 0) {
+        const validationWs = XLSX.utils.aoa_to_sheet(validationOptionsData);
+        XLSX.utils.book_append_sheet(wb, validationWs, '_ValidationLists');
+      }
+      // --- プルダウン選択肢用の別シート作成 終わり --- 
+
       XLSX.writeFile(wb, '顧客管理フォーマット.xlsx');
     } catch (error) {
       console.error("Excel generation failed:", error);
