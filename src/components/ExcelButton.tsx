@@ -34,6 +34,24 @@ const INDUSTRY_OPTIONS = [
   "公務（他に分類されるものを除く）", "分類不能の産業"
 ];
 
+const EXAMPLE_DATA_MAP: { [key: string]: string } = {
+  '顧客法人名': '例：株式会社アイ・ステーション',
+  '担当者名（姓）': '例：山田',
+  '担当者名（名）': '例：太郎',
+  '電話番号': '例：09012345678',
+  '業種': '例：情報通信業',
+  '県域': '例：東京都',
+  '住所': '例：東京都千代田区1-2-3',
+  'メールアドレス': '例：example@example.com',
+  '流入日': '例：2024/01/01',
+  '流入元': '例：Web広告',
+  'リスト名': '例：2024年新規リード',
+  '事業所名': '例：東京本社',
+  '小業種': '例：ソフトウェア開発',
+  '備考': '例：特記事項',
+  '担当者役職': '例：部長',
+};
+
 export default function ExcelButton({ optionalColumns, customColumns }: ExcelButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -49,6 +67,10 @@ export default function ExcelButton({ optionalColumns, customColumns }: ExcelBut
         inflowDate: '流入日',
         inflowSource: '流入元',
         listName: 'リスト名',
+        officeName: '事業所名',
+        subIndustry: '小業種',
+        remarks: '備考',
+        contactTitle: '担当者役職',
       };
 
       const selectedOptionalColumns = Object.keys(optionalColumns)
@@ -58,7 +80,27 @@ export default function ExcelButton({ optionalColumns, customColumns }: ExcelBut
       const customColumnNames = customColumns.map(col => col.name).filter(name => name.trim() !== '');
 
       const headers = [...fixedColumns, ...selectedOptionalColumns, ...customColumnNames];
-      const ws = XLSX.utils.aoa_to_sheet([headers]);
+
+      // --- 例の行を作成 --- 
+      const exampleRow: string[] = headers.map(header => {
+        if (EXAMPLE_DATA_MAP[header]) {
+          return EXAMPLE_DATA_MAP[header];
+        } else {
+          // For custom columns not in EXAMPLE_DATA_MAP
+          const customCol = customColumns.find(col => col.name === header);
+          if (customCol) {
+            if (customCol.type === 'select') {
+              return '例：選択肢から選択';
+            } else { // text type
+              return '例：自由入力';
+            }
+          }
+          return ''; // Default for unknown headers
+        }
+      });
+
+      const dataForSheet = [headers, exampleRow];
+      const ws = XLSX.utils.aoa_to_sheet(dataForSheet);
 
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, '顧客リスト');
