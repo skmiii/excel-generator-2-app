@@ -66,11 +66,11 @@ export default function Home() {
           
           <section className="p-6 bg-white rounded-lg shadow">
              <h2 className="text-lg font-semibold text-black">現在の選択状況（確認用）</h2>
-             <pre className="text-xs bg-gray-100 p-4 rounded-md mt-2">
+             <pre className="text-xs bg-gray-100 p-4 rounded-md mt-2 text-black">
                {JSON.stringify(optionalColumns, null, 2)}
              </pre>
              <h2 className="text-lg font-semibold text-black mt-4">現在のオリジナル項目（確認用）</h2>
-             <pre className="text-xs bg-gray-100 p-4 rounded-md mt-2">
+             <pre className="text-xs bg-gray-100 p-4 rounded-md mt-2 text-black">
                {JSON.stringify(customColumns, null, 2)}
              </pre>
           </section>
