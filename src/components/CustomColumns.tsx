@@ -62,7 +62,7 @@ export default function CustomColumns({ customColumns, setCustomColumns }: Custo
                 placeholder="選択肢（カンマ区切り）"
                 value={col.options}
                 onChange={(e) => updateColumn(col.id, 'options', e.target.value)}
-                className="flex-grow p-2 border rounded-md w-full sm:w-auto"
+                className="flex-grow p-2 border rounded-md w-full sm:w-auto custom-placeholder-black"
               />
             )}
             <button
