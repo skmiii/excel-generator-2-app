@@ -67,7 +67,7 @@ export default function CustomColumns({ customColumns, setCustomColumns }: Custo
             )}
             <button
               onClick={() => removeColumn(col.id)}
-              className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm"
+              className="px-3 py-1 bg-red-500 text-black rounded-md hover:bg-red-600 text-sm"
             >
               削除
             </button>
