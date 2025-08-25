@@ -26,7 +26,12 @@ const JAPANESE_PREFECTURES = [
 ];
 
 const INDUSTRY_OPTIONS = [
-  "製造業", "サービス業", "情報通信業", "小売業", "卸売業", "建設業", "医療・福祉", "教育・学習支援業", "金融・保険業", "不動産業", "運輸業", "その他"
+  "農業，林業", "漁業", "鉱業，採石業，砂利採取業", "建設業", "製造業",
+  "電気・ガス・熱供給・水道業", "情報通信業", "運輸業，郵便業", "卸売業，小売業",
+  "金融業，保険業", "不動産業，物品賃貸業", "学術研究，専門・技術サービス業",
+  "宿泊業，飲食サービス業", "生活関連サービス業，娯楽業", "教育，学習支援業",
+  "医療，福祉", "複合サービス事業", "サービス業（他に分類されないもの）",
+  "公務（他に分類されるものを除く）", "分類不能の産業"
 ];
 
 export default function ExcelButton({ optionalColumns, customColumns }: ExcelButtonProps) {
@@ -117,7 +122,7 @@ export default function ExcelButton({ optionalColumns, customColumns }: ExcelBut
       XLSX.writeFile(wb, '顧客管理フォーマット.xlsx');
     } catch (error) {
       console.error("Excel generation failed:", error);
-      // You could add state to show an error message to the user
+      // You could add state to show an error message to show the user
     } finally {
       setIsLoading(false);
     }
