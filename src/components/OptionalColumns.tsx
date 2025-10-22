@@ -32,3 +32,7 @@ export default function OptionalColumns({ columns, onChange }: OptionalColumnsPr
             <span className="text-black">{COLUMN_LABELS[key]}</span>
           </label>
         ))}
+      </div>
+    </section>
+  );
+}
