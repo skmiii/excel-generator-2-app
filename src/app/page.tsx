@@ -139,7 +139,7 @@ export default function Home() {
           </section>
 
           <section className="text-center mt-12">
-            <DynamicExcelButton optionalColumns={optionalColumns} customColumns={customColumns} manualContent={manualContent} />
+            <DynamicExcelButton optionalColumns={optionalColumns} customColumns={customColumns} salesColumns={salesColumns} manualContent={manualContent} />
           </section>
 
           {/* --- マニュアルセクション --- */}
