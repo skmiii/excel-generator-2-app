@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import * as XLSX from 'xlsx';
-import { COLUMN_LABELS } from '@/lib/constants';
+import { COLUMN_LABELS, SALES_COLUMN_LABELS } from '@/lib/constants';
 
 interface CustomColumn {
   id: number;
@@ -14,6 +14,7 @@ interface CustomColumn {
 interface ExcelButtonProps {
   optionalColumns: { [key: string]: boolean };
   customColumns: CustomColumn[]; // Add customColumns prop
+  salesColumns: { [key: string]: boolean }; // Add salesColumns prop
   manualContent: string[]; // New prop for manual content
 }
 
@@ -54,9 +55,17 @@ const EXAMPLE_DATA_MAP: { [key: string]: string } = {
   '担当者役職': '例：部長',
   'Salesforceリード': '例：https://example.salesforce.com/...',
   'Salesforce取引先': '例：https://example.salesforce.com/...',
+  'ステータス_インサイド': '例：アポイント獲得',
+  'ステータス_フィールド': '例：初回訪問済',
+  '売上': '例：1000000',
+  '粗利': '例：300000',
+  '提案【商材A】': '例：提案済',
+  '提案【商材B】': '例：検討中',
+  '提案【商材C】': '例：未提案',
+  '議事録': '例：2024年10月22日商談議事録',
 };
 
-export default function ExcelButton({ optionalColumns, customColumns, manualContent }: ExcelButtonProps) {
+export default function ExcelButton({ optionalColumns, customColumns, salesColumns, manualContent }: ExcelButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleGenerateClick = () => {
@@ -69,9 +78,13 @@ export default function ExcelButton({ optionalColumns, customColumns, manualCont
         .filter(key => optionalColumns[key as keyof typeof optionalColumns])
         .map(key => COLUMN_LABELS[key]);
 
+      const selectedSalesColumns = Object.keys(salesColumns)
+        .filter(key => salesColumns[key as keyof typeof salesColumns])
+        .map(key => SALES_COLUMN_LABELS[key]);
+
       const customColumnNames = customColumns.map(col => col.name).filter(name => name.trim() !== '');
 
-      const headers = [...fixedColumns, ...selectedOptionalColumns, ...customColumnNames];
+      const headers = [...fixedColumns, ...selectedOptionalColumns, ...selectedSalesColumns, ...customColumnNames];
 
       // --- 例の行を作成 --- 
       const exampleRow: string[] = headers.map(header => {

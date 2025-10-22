@@ -4,6 +4,7 @@ import { useState, ChangeEvent } from 'react';
 import dynamic from 'next/dynamic';
 import OptionalColumns from '@/components/OptionalColumns';
 import CustomColumns from '@/components/CustomColumns'; // Import CustomColumns
+import SalesColumns from '@/components/SalesColumns'; // Import SalesColumns
 
 // Dynamically import the ExcelButton component with SSR turned off
 const DynamicExcelButton = dynamic(() => import('@/components/ExcelButton'), {
@@ -34,11 +35,30 @@ export default function Home() {
     salesforceAccount: false,
   });
 
+  const [salesColumns, setSalesColumns] = useState({
+    statusInside: false,
+    statusField: false,
+    salesAmount: false,
+    grossProfit: false,
+    proposalProductA: false,
+    proposalProductB: false,
+    proposalProductC: false,
+    meetingMinutes: false,
+  });
+
   const [customColumns, setCustomColumns] = useState<CustomColumn[]>([]); // New state for custom columns
 
   const handleOptionalColumnChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
     setOptionalColumns(prevState => ({
+      ...prevState,
+      [name]: checked,
+    }));
+  };
+
+  const handleSalesColumnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setSalesColumns(prevState => ({
       ...prevState,
       [name]: checked,
     }));
@@ -103,6 +123,9 @@ export default function Home() {
 
           {/* Render CustomColumns component */}
           <CustomColumns customColumns={customColumns} setCustomColumns={setCustomColumns} />
+
+          {/* Render SalesColumns component */}
+          <SalesColumns columns={salesColumns} onChange={handleSalesColumnChange} />
           
           <section className="p-6 bg-white rounded-lg shadow">
              <h2 className="text-lg font-semibold text-black">現在の選択状況（確認用）</h2>
