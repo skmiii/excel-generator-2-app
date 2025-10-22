@@ -30,6 +30,8 @@ export default function Home() {
     subIndustry: false,
     remarks: false,
     contactTitle: false,
+    salesforceLead: false,
+    salesforceAccount: false,
   });
 
   const [customColumns, setCustomColumns] = useState<CustomColumn[]>([]); // New state for custom columns

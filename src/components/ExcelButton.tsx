@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import * as XLSX from 'xlsx';
+import { COLUMN_LABELS } from '@/lib/constants';
 
 interface CustomColumn {
   id: number;
@@ -51,6 +52,8 @@ const EXAMPLE_DATA_MAP: { [key: string]: string } = {
   '小業種': '例：ソフトウェア開発',
   '備考': '例：特記事項',
   '担当者役職': '例：部長',
+  'Salesforceリード': '例：https://example.salesforce.com/...',
+  'Salesforce取引先': '例：https://example.salesforce.com/...',
 };
 
 export default function ExcelButton({ optionalColumns, customColumns, manualContent }: ExcelButtonProps) {
@@ -61,22 +64,10 @@ export default function ExcelButton({ optionalColumns, customColumns, manualCont
     
     try {
       const fixedColumns = ['顧客法人名', '担当者名（姓）', '担当者名（名）', '電話番号', '業種'];
-      const optionalColumnLabels: { [key: string]: string } = {
-        prefecture: '県域',
-        address: '住所',
-        email: 'メールアドレス',
-        inflowDate: '流入日',
-        inflowSource: '流入元',
-        listName: 'リスト名',
-        officeName: '事業所名',
-        subIndustry: '小業種',
-        remarks: '備考',
-        contactTitle: '担当者役職',
-      };
-
+      
       const selectedOptionalColumns = Object.keys(optionalColumns)
         .filter(key => optionalColumns[key as keyof typeof optionalColumns])
-        .map(key => optionalColumnLabels[key]);
+        .map(key => COLUMN_LABELS[key]);
 
       const customColumnNames = customColumns.map(col => col.name).filter(name => name.trim() !== '');
 
