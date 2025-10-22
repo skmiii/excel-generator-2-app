@@ -14,6 +14,7 @@ interface CustomColumn {
 interface ExcelButtonProps {
   optionalColumns: { [key: string]: boolean };
   customColumns: CustomColumn[]; // Add customColumns prop
+  salesColumns: { [key: string]: boolean }; // Add salesColumns prop
   manualContent: string[]; // New prop for manual content
 }
 
